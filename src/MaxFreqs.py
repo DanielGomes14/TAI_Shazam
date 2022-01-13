@@ -11,6 +11,6 @@ class MaxFreqs:
 
     def calc_max_freqs(self):
         # execute binary to get max frequencies of musics and for the sample
-        for filename in os.scandir(self.music_dir):
-            subprocess.run([f"./GetMaxFreqs -w {MUSIC_MAX_FREQS}{filename.name} {self.music_dir}{filename.name}"], shell=True)
+        for file in os.scandir(self.music_dir):
+            subprocess.run([f"./GetMaxFreqs -w {MUSIC_MAX_FREQS}{file.name} {self.music_dir}{file.name}"], shell=True)
         subprocess.run([f"./GetMaxFreqs -w {SAMPLE_MAX_FREQS}{self.sample_name} {self.sample}"], shell=True)
