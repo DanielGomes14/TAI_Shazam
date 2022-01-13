@@ -18,6 +18,7 @@ class Main:
         self.NCD = NCD(sample)
 
         music = self.NCD.recognize_music()
+        print(f"Guessed Music: {music}" )
 
 
 

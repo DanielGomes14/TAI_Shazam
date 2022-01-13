@@ -4,7 +4,8 @@ class Compressor:
             import gzip as compressor
         elif compressor == "bzip2":
             import bz2 as compressor
-        
+        elif compressor == "lzma":
+            import lzma as compressor
         self.compressor = compressor
 
     
