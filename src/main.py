@@ -7,15 +7,16 @@ from audioUtils import add_noise
 class Main:
     def __init__(self) -> None:
         sample, noise, music_dir, compressor =  self.check_arguments()
+        sample_name = sample.split(".")[-2].split("/")[-1] + "." + sample.split(".")[-1]
         
         if noise:
-            add_noise(sample)
+            add_noise(sample, sample_name, noise)
 
-        self.max_freqs = MaxFreqs(music_dir, sample)
+        self.max_freqs = MaxFreqs(music_dir, sample, sample_name)
 
         self.max_freqs.calc_max_freqs()
         
-        self.NCD = NCD(sample, compressor)
+        self.NCD = NCD(sample, sample_name, compressor)
 
         music = self.NCD.recognize_music()
         print(f"Guessed Music: {music}" )
@@ -34,7 +35,7 @@ class Main:
         )
 
         arg_parser.add_argument('-sample', nargs=1, default=["./../wav_files/sample03.wav"])
-        arg_parser.add_argument('-noise', action="store_true", default=False)
+        arg_parser.add_argument('-noise', nargs=1, type=float, default=[0.1])
         arg_parser.add_argument('-music_dir', nargs=1, default=["./../wav_files/"])
         # meter outros
         arg_parser.add_argument('-compressor', nargs=1, default=["gzip"], choices=["gzip", "bzip2"])
@@ -46,7 +47,7 @@ class Main:
             sys.exit(0)
 
         sample = args.sample[0]
-        noise = args.noise
+        noise = args.noise[0]
         music_dir = args.music_dir[0]
         compressor = args.compressor[0]
 

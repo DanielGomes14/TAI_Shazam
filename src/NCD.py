@@ -4,8 +4,8 @@ import os
 
 
 class NCD:
-    def __init__(self, sample, compressor="gzip") -> None:
-        self.sample_name = sample.split(".")[-2].split("/")[-1] + "." + sample.split(".")[-1]
+    def __init__(self, sample, sample_name, compressor="gzip") -> None:
+        self.sample_name = sample_name
 
         self.compressor = Compressor(compressor)
 

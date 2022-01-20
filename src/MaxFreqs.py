@@ -3,10 +3,10 @@ import subprocess
 from consts import *
 
 class MaxFreqs:
-    def __init__(self, music_dir, sample) -> None:
+    def __init__(self, music_dir, sample, sample_name) -> None:
         self.music_dir = music_dir
         self.sample = sample
-        self.sample_name = sample.split(".")[-2].split("/")[-1] + "." + sample.split(".")[-1]
+        self.sample_name = sample_name
 
 
     def calc_max_freqs(self):
