@@ -3,6 +3,7 @@ import sys
 from MaxFreqs import MaxFreqs
 from NCD import NCD
 from audioUtils import add_noise
+from consts import SAMPLE_MAX_FREQS
 
 class Main:
     def __init__(self) -> None:
@@ -11,6 +12,8 @@ class Main:
         
         if noise:
             add_noise(sample, sample_name, noise)
+            sample = f"{SAMPLE_MAX_FREQS}noise_{noise}_{sample_name}"
+            sample_name = f"noise_{noise}_{sample_name}"
 
         self.max_freqs = MaxFreqs(music_dir, sample, sample_name)
 
@@ -34,8 +37,8 @@ class Main:
             usage=self.usage
         )
 
-        arg_parser.add_argument('-sample', nargs=1, default=["./../wav_files/sample03.wav"])
-        arg_parser.add_argument('-noise', nargs=1, type=float, default=[0.1])
+        arg_parser.add_argument('-sample', nargs=1, default=["./../wav_files/sample02.wav"])
+        arg_parser.add_argument('-noise', nargs=1, type=float, default=[0.02])
         arg_parser.add_argument('-music_dir', nargs=1, default=["./../wav_files/"])
         # meter outros
         arg_parser.add_argument('-compressor', nargs=1, default=["gzip"], choices=["gzip", "bzip2"])
