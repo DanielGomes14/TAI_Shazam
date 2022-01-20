@@ -2,20 +2,20 @@ import argparse
 import sys
 from MaxFreqs import MaxFreqs
 from NCD import NCD
+from audioUtils import add_noise
 
 class Main:
     def __init__(self) -> None:
-        sample, noise, music_dir, compressor=  self.check_arguments()
+        sample, noise, music_dir, compressor =  self.check_arguments()
         
         if noise:
-            #add noise to sample
-            print("noise")
+            add_noise(sample)
 
         self.max_freqs = MaxFreqs(music_dir, sample)
 
         self.max_freqs.calc_max_freqs()
         
-        self.NCD = NCD(sample)
+        self.NCD = NCD(sample, compressor)
 
         music = self.NCD.recognize_music()
         print(f"Guessed Music: {music}" )
