@@ -22,7 +22,6 @@ class NCD:
         sample_freqs = sample_freqs_file.read()
 
         cx = self.compressor.compress(sample_freqs)
-
         for music_file in os.scandir(MUSIC_MAX_FREQS):
             music_freqs_file = open(f"{MUSIC_MAX_FREQS}{music_file.name}",mode ="rb")
 
