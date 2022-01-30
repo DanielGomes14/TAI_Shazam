@@ -17,7 +17,8 @@ class MaxFreqs:
             n_sample_name = f"freqs_{sample_name}"
         
             if n_sample_name not in sample_musics:
-                subprocess.run([f"./GetMaxFreqs -w {SAMPLE_MAX_FREQS}{n_sample_name} {sample}"], shell=True)
+                cmd = f"./GetMaxFreqs -w {SAMPLE_MAX_FREQS}{n_sample_name} {sample}"
+                subprocess.run([cmd], shell=True)
                 if sample_name in sample_musics:
                     os.remove(f"{SAMPLE_MAX_FREQS}{sample_name}")
 
