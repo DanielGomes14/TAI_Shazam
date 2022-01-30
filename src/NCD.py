@@ -1,10 +1,10 @@
 from consts import *
-from compressor import Compressor
+from Compressor import Compressor
 import os
 
 
 class NCD:
-    def __init__(self, sample, sample_name, compressor="gzip") -> None:
+    def __init__(self, sample_name, compressor="gzip") -> None:
         self.sample_name = sample_name
 
         self.compressor = Compressor(compressor)
@@ -30,9 +30,8 @@ class NCD:
             cy = self.compressor.compress(music_freqs)
 
             cxy = self.compressor.compress(sample_freqs + music_freqs)
-            
-            self.music_ndc[music_file.name.split(".")[-2]] = self.calc_NCD(cx, cy, cxy)
+
+            self.music_ndc[music_file.name] = self.calc_NCD(cx, cy, cxy)
 
         music = min(self.music_ndc, key=self.music_ndc.get)
-        print(self.music_ndc)
         return music

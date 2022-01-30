@@ -1,42 +1,54 @@
 import argparse
 import sys
+from tkinter import N
 from MaxFreqs import MaxFreqs
 from NCD import NCD
-from audioUtils import add_noise,trim_audio_file
+from audioUtils import add_noise, trim_audio_file
 from consts import SAMPLE_MAX_FREQS
-
+from Tests import Tests
 class Main:
     def __init__(self) -> None:
-        sample, noise, trim,  music_dir, compressor =  self.check_arguments()
+        sample, noise, trim_start, trim_duration,  music_dir, compressor, tests =  self.check_arguments()
         
+        if tests:
+            test_obj = Tests(music_dir)
+            test_obj.trim_tests()
+            test_obj.noise_tests()
+            test_obj.compressor_tests()
+            #test_obj.all_tests()
+            exit(0)
+
         sample_name = sample.split(".")[-2].split("/")[-1] + "." + sample.split(".")[-1]
-        
-        if trim:
-            trim_audio_file(sample,trim, sample_name)
-            sample= f"{SAMPLE_MAX_FREQS}trim_{sample_name}"
+
+        if trim_duration:
+            trim_audio_file(sample, trim_start, trim_duration, sample_name)
             sample_name = f"trim_{sample_name}"
+            sample = f"{SAMPLE_MAX_FREQS}{sample_name}"
 
-
-        noise = None
         if noise:
             add_noise(sample, sample_name, noise)
-            sample = f"{SAMPLE_MAX_FREQS}noise_{noise}_{sample_name}"
             sample_name = f"noise_{noise}_{sample_name}"
+            sample = f"{SAMPLE_MAX_FREQS}{sample_name}"
 
         self.max_freqs = MaxFreqs(music_dir, sample, sample_name)
-
-        self.max_freqs.calc_max_freqs()
-
-        self.NCD = NCD(sample, sample_name, compressor)
-
+        sample, sample_name = self.max_freqs.calc_max_freqs(sample, sample_name)
+        
+        self.NCD = NCD(sample_name, compressor)
         music = self.NCD.recognize_music()
         print(f"Guessed Music: {music}" )
 
 
 
     def usage(self):
-        print("Usage: python3 main.py \n\t-f <file name for data set:str> \n\t-k <context size:int>" +\
-            "\n\t-a <alpha:int> \n\t-g <generate text> \n\t-t <number of characters to generate:int>\n")
+        print("Usage: python3 main.py\
+            \n\t-s <Sample file path to be identified: str>\
+            \n\t-m <Directory for music database: str>\
+            \n\t-c <Compressor to be used (gzip, bzip2 or lzma): str>\
+            \n\t-n <Noise level to add to the sample: float>\
+            \n\t-t <Time of sample to start triming: float>\
+            \n\t-d <Duration of the trim: float>\
+            \n\t-r <Run tests>\n")
+
 
 
     def check_arguments(self):
@@ -45,12 +57,13 @@ class Main:
             usage=self.usage
         )
 
-        arg_parser.add_argument('-sample', nargs=1, default=["./../wav_files/sample02.wav"])
-        arg_parser.add_argument('-noise', nargs=1, type=float, default=[0.02])
-        arg_parser.add_argument('-trim', nargs=1, type=float, default=[5])
+        arg_parser.add_argument('-sample', nargs=1, default=["./../wav_files/sample04.wav"])
+        arg_parser.add_argument('-noise', nargs=1, type=float, default=[0.2])
+        arg_parser.add_argument('-trim_start', nargs=1, type=float, default=[0])
+        arg_parser.add_argument('-duration', nargs=1, type=float, default=[0])
         arg_parser.add_argument('-music_dir', nargs=1, default=["./../wav_files/"])
-        # meter outros
-        arg_parser.add_argument('-compressor', nargs=1, default=["gzip"], choices=["gzip", "bzip2"])
+        arg_parser.add_argument('-compressor', nargs=1, default=["gzip"], choices=["gzip", "bzip2", "lzma"])
+        arg_parser.add_argument('-run_tests', action="store_true")
         args = None
         try:
             args = arg_parser.parse_args()
@@ -60,11 +73,13 @@ class Main:
 
         sample = args.sample[0]
         noise = args.noise[0]
-        trim = args.trim[0]
+        trim_start = args.trim_start[0]
+        trim_duration = args.duration[0]
         music_dir = args.music_dir[0]
         compressor = args.compressor[0]
+        tests = args.run_tests
 
-        return sample, noise,trim, music_dir, compressor
+        return sample, noise, trim_start, trim_duration, music_dir, compressor, tests
 
 
 if __name__ =="__main__":

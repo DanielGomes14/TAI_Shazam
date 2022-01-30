@@ -8,7 +8,6 @@ class Compressor:
             import lzma as compressor
         self.compressor = compressor
 
-    
     # Returns number of bytes
     def compress(self, data):
         return len(self.compressor.compress(data))
