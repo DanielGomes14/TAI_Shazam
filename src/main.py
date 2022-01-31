@@ -53,7 +53,7 @@ class Main:
             usage=self.usage
         )
 
-        arg_parser.add_argument('-sample', nargs=1, default=["./../wav_files/J_Cole-WHO_DAT.wav"])
+        arg_parser.add_argument('-sample', nargs=1, default=["./../wav_files/J_Cole-Who_Dat.wav"])
         arg_parser.add_argument('-noise', nargs=1, type=float, default=[0])
         arg_parser.add_argument('-trim_start', nargs=1, type=float, default=[0])
         arg_parser.add_argument('-duration', nargs=1, type=float, default=[0])
