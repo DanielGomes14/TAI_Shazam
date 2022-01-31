@@ -15,22 +15,18 @@ class Main:
             test_obj.trim_tests()
             test_obj.noise_tests()
             test_obj.compressor_tests()
-            #test_obj.all_tests()
+            test_obj.all_tests()
             exit(0)
 
         sample_name = sample.split(".")[-2].split("/")[-1] + "." + sample.split(".")[-1]
 
         if trim_duration:
-            trim_audio_file(sample, trim_start, trim_duration, sample_name)
-            sample_name = f"trim_{sample_name}"
-            sample = f"{SAMPLE_MAX_FREQS}{sample_name}"
+            sample, sample_name = trim_audio_file(sample, trim_start, trim_duration, sample_name)
 
         if noise:
-            add_noise(sample, sample_name, noise)
-            sample_name = f"noise_{noise}_{sample_name}"
-            sample = f"{SAMPLE_MAX_FREQS}{sample_name}"
+            sample, sample_name = add_noise(sample, sample_name, noise)
 
-        self.max_freqs = MaxFreqs(music_dir, sample, sample_name)
+        self.max_freqs = MaxFreqs(music_dir)
         sample, sample_name = self.max_freqs.calc_max_freqs(sample, sample_name)
         
         self.NCD = NCD(sample_name, compressor)
@@ -57,8 +53,8 @@ class Main:
             usage=self.usage
         )
 
-        arg_parser.add_argument('-sample', nargs=1, default=["./../wav_files/sample04.wav"])
-        arg_parser.add_argument('-noise', nargs=1, type=float, default=[0.2])
+        arg_parser.add_argument('-sample', nargs=1, default=["./../wav_files/J_Cole-WHO_DAT.wav"])
+        arg_parser.add_argument('-noise', nargs=1, type=float, default=[0])
         arg_parser.add_argument('-trim_start', nargs=1, type=float, default=[0])
         arg_parser.add_argument('-duration', nargs=1, type=float, default=[0])
         arg_parser.add_argument('-music_dir', nargs=1, default=["./../wav_files/"])
